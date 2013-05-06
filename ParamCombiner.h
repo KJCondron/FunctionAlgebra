@@ -3,6 +3,7 @@
 #ifndef META_ALGEBRA_PARAMCOMBINER_H
 #define META_ALGEBRA_PARAMCOMBINER_H
 
+#include "Param.h"
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/remove.hpp>
