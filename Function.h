@@ -36,7 +36,7 @@ private:
 };
 
 
-template < typename ParamSet, typename ReturnType = double >
+template < typename ParamSet, typename ReturnType >
 struct IPFunction
 {
 	typedef boost::shared_ptr< const IPFunction > Ptr;
@@ -55,11 +55,18 @@ struct IPFunction
 	}*/
 
 
+template< typename R1, typename R2 >
+struct ReturnCombiner
+{
+	const static bool val = boost::is_same< R1, R2 >::value;  
+	BOOST_STATIC_ASSERT( val );
+	typedef R1 type;
+};
 
 private:
 	template< typename Op, typename OtherParamSet, typename OtherReturnType >
 	PFunction< typename ParamCombiner<ParamSet, OtherParamSet>::type,
-		       typename ReturnCombiner<ReturnType OtherReturnType>::type >
+		       typename ReturnCombiner<ReturnType, OtherReturnType>::type >
 	combine( const IPFunction<OtherParamSet, OtherReturnType>& f )
 	{
 		typename typename ParamCombiner<ParamSet, OtherParamSet>::type NewParam;

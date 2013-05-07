@@ -1,14 +1,15 @@
 #ifndef META_ALGEBRA_PARAMNAMES_H
 #define META_ALGEBRA_PARAMNAMES_H
 
+#include <string>
 
 #define MAKEPARAMETER(letter) \
 	struct _##letter \
 	{ \
-		_##letter( double va; ) : _val(val) {} \
+		_##letter( double val ) : _val(val) {} \
 		const double& operator()() const { return _val; } \
-		static std::string toString()  { return #letter; } \ 
-		double _val;  \
+		static std::string toString()  { return #letter; } \
+		double _val; \
 	};
 
 #define DECL(letter, identity) \

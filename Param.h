@@ -2,9 +2,11 @@
 #define META_ALGEBRA_PARAM_H
 
 #include "ParamNames.h"
+#include "MetaFunctions.h"
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/remove.hpp>
+#include <boost/mpl/unique.hpp>
 #include <boost/mpl/remove_if.hpp>
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/joint_view.hpp>
@@ -21,7 +23,7 @@ namespace ph = mpl::placeholders;
 using mpl::int_;
 
 #define RETURNIFMATCH(count) \
-	if boost::is_same<P##count, T>::value ) return T( _v##count() )
+	if boost::is_same<P##count, T>::value return T( _v##count() )
 
 #define GET(count, oP) GetWrapper<OtherP, P##count>::get(op)
 
@@ -40,6 +42,12 @@ template<
 	typename T18 = _null, typename T19 = _null >
 struct Param
 {
+	typedef T0 P0; typedef T1 P1; typedef T2 P2; typedef T3 P3;
+	typedef T4 P4; typedef T5 P5; typedef T6 P6; typedef T7 P7;
+	typedef T8 P8; typedef T9 P9; typedef T10 P10; typedef T11 P11;
+	typedef T12 P12; typedef T13 P13; typedef T14 P14; typedef T15 P15;
+	typedef T16 P16; typedef T17 P17; typedef T18 P18; typedef T19 P19;
+	
 	Param() {} 
 
 	Param(const P0& v0) :
@@ -203,14 +211,14 @@ struct Param
 	
 	const static size_t size = mpl::size< RealTypes >::type::value; 
 
-	typedef typename mpl::list< _a, _b, _c, _d, _g, _j, _k, _l, 
-		                        _m, _n, _p, _q, _r, _s, _t,_ u,
-								_v_, _w, _x, _y, _z > AllTypes;
+	typedef typename mpl::list< _a, _b, _c, _d, _g, _j, _k,  
+		                        _m, _n, _p, _q, _r, _s, _t, 
+								_u, _v, _w, _x, _y, _z > AllTypes;
 	typedef typename mpl::sort< RealTypes,
 		                       mpl::less< IndexOf< AllTypes, ph::_1 >, IndexOf< AllTypes, ph::_2 > >
 							   >::type STypes;
 
-	typedef typename mpl::unique < STypes, boost::is_same<ph::_1, ph::_2> >::type UTypes;
+	typedef typename mpl::unique< STypes, boost::is_same<ph::_1, ph::_2> >::type UTypes;
 
 	const static bool val = mpl::size<RealTypes>::type_info::value ==
 		mpl::size<UTypes>::type_info::value;
