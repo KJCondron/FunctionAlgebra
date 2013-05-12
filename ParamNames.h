@@ -3,10 +3,19 @@
 
 #include <string>
 
+#ifdef FOR_PRINTING
+	#define CONSTRUCTOR(letter) \
+	_##letter() : _val(-1) {} \
+	_##letter( double val ) : _val(val) {}	
+#else
+#define CONSTRUCTOR(letter) \
+	_##letter( double val ) : _val(val) {}
+#endif
+
 #define MAKEPARAMETER(letter) \
 	struct _##letter \
 	{ \
-		_##letter( double val ) : _val(val) {} \
+		CONSTRUCTOR(letter) \
 		const double& operator()() const { return _val; } \
 		static std::string toString()  { return #letter; } \
 		double _val; \

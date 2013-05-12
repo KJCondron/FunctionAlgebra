@@ -74,7 +74,7 @@ struct FunctionOp : public IPFunction<
 	ReturnType operator()( const NewParam& p ) const
 	{
 		typename Func1::ReturnType v1 = (*m_f1)( p );
-		typename Func1::ReturnType v2 = (*m_f2)( p );
+		typename Func2::ReturnType v2 = (*m_f2)( p );
 
 		return OP::apply( v1, v2 );
 	}

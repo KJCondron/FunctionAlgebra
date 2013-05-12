@@ -51,7 +51,7 @@ struct PFunction : IPFunction< ParamSet >
 
 	virtual ThisType* clone() const
 	{
-		new ThisType( m_f );
+		return new ThisType( m_f );
 	}
 
 private:

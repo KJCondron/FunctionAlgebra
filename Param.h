@@ -23,11 +23,11 @@ namespace ph = mpl::placeholders;
 using mpl::int_;
 
 #define RETURNIFMATCH(count) \
-	if boost::is_same<P##count, T>::value return T( _v##count() )
+	if( boost::is_same<P##count, T>::value ) return T( _v##count() )
 
-#define GET(count, oP) GetWrapper<OtherP, P##count>::get(op)
+#define GET(count, op) GetWrapper<OtherP, P##count>::get(op)
 
-#define CONT(count) ConstainsOrIsNull<OtherP, P##count>::value
+#define CONT(count) ContainsOrIsNull<OtherP, P##count>::value
                        
 #define INSERTINTOMAP(type, value) \
 	prmMap[ type::toString() ] = #value;
@@ -54,7 +54,7 @@ struct Param
 	 _v0(v) {}
 
 	Param(const P0& v0, const P1& v1) :
-		_v0(v ), _v0(v) {}
+		_v0(v0), _v1(v1) {}
 
 	Param(const P0& v0, const P1& v1, const P2& v2) :
 		_v0( v0 ),  _v1( v1 ),  _v2( v2 ) {}
@@ -181,11 +181,11 @@ struct Param
 		 P10 _v10; P11 _v11; P12 _v12; P13 _v13; P14 _v14; P15 _v15; P16 _v16; P17 _v17; P18 _v18; P19 _v19;
 
 	template< typename OtherP >
-	Param( const OtherP& oP ) :
-		_v0( GET(0,oP) ), _v1( GET(1,oP) ), _v2( GET(2,oP) ), _v3( GET(3,oP) ), _v4( GET(4,oP) ),
-		_v5( GET(5,oP) ), _v6( GET(6,oP) ), _v7( GET(7,oP) ), _v8( GET(8,oP) ), _v9( GET(9,oP) ),
-		_v10( GET(10,oP) ), _v11( GET(11,oP) ), _v12( GET(12,oP) ), _v13( GET(13,oP) ), _v14( GET(14,oP) ),
-		_v15( GET(15,oP) ), _v16( GET(16,oP) ), _v17( GET(17,oP) ), _v18( GET(18,oP) ), _v19( GET(19,oP) )
+	Param( const OtherP& op ) :
+		_v0( GET(0,op) ), _v1( GET(1,op) ), _v2( GET(2,op) ), _v3( GET(3,op) ), _v4( GET(4,op) ),
+		_v5( GET(5,op) ), _v6( GET(6,op) ), _v7( GET(7,op) ), _v8( GET(8,op) ), _v9( GET(9,op) ),
+		_v10( GET(10,op) ), _v11( GET(11,op) ), _v12( GET(12,op) ), _v13( GET(13,op) ), _v14( GET(14,op) ),
+		_v15( GET(15,op) ), _v16( GET(16,op) ), _v17( GET(17,op) ), _v18( GET(18,op) ), _v19( GET(19,op) )
 	{
 		const static bool val =
 			CONT(0) && CONT(1) && CONT(2) && CONT(3) && CONT(4) &&

@@ -32,9 +32,8 @@ using mpl::int_;
 template< typename ParamSet1, typename ParamSet2 >
 struct ParamCombiner
 {
-private:
 	typedef ParamSet1 P1;
-	typedef ParamSet1 P2;
+	typedef ParamSet2 P2;
 	typedef mpl::vector< _null, _null, _null, _null, _null,
 		                 _null, _null, _null, _null, _null,
 		                 _null, _null, _null, _null, _null,
