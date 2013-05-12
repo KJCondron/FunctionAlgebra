@@ -102,6 +102,12 @@ public:
 };
 
 
-
+template< typename R1, typename R2 >
+struct ReturnCombiner
+{
+	const static bool val = boost::is_same< R1, R2 >::value;  
+	BOOST_STATIC_ASSERT( val );
+	typedef R1 type;
+};
 
 #endif // META_ALGEBRA_PARAMCOMBINER_H

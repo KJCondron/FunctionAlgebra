@@ -220,8 +220,8 @@ struct Param
 
 	typedef typename mpl::unique< STypes, boost::is_same<ph::_1, ph::_2> >::type UTypes;
 
-	const static bool val = mpl::size<RealTypes>::type_info::value ==
-		mpl::size<UTypes>::type_info::value;
+	const static bool val = mpl::size<RealTypes>::type::value ==
+		mpl::size<UTypes>::type::value;
 
 	BOOST_STATIC_ASSERT(val);
 

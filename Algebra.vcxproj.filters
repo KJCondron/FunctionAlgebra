@@ -33,6 +33,12 @@
     <ClInclude Include="MetaFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FunctionOp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Function.cpp">

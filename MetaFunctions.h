@@ -12,4 +12,10 @@ struct IndexOf : mpl::distance< typename mpl::begin<S>::type,
 				typename mpl::find< S, T >::type >
 {};
 
+template<typename T, typename P>
+struct GetWrapper
+{
+	T static get( const P& p ) { return p.template get<T>(); }
+}
+
 #endif

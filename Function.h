@@ -3,20 +3,40 @@
 #define META_ALGEBRA_FUNCTION_H
 
 #include "ParamCombiner.h"
+#include "FunctionOp.h"
 #include <boost/shared_ptr.hpp>
 
+///////////////////// NEW META FUNCTIONS //////////////////////////////////////////
 
-template < typename ParamSet, typename ReturnType = double >
-struct IPFunction;
+template< typename F1, typename F2 >
+struct FType 
+{
+	typedef IPFunction< 
+		typename ParamCombiner< 
+			typename F1::ParamSet,
+			typename F2::ParamSet >::type,
+		typename ReturnCombiner<
+			typename F1::ReturnType,
+			typename F2::ReturnType>::type
+	> type;
+};
+
+////////////////////////////////////////////////////////////////////////////////////
+
+
+//template < typename ParamSet, typename ReturnType = double >
+//struct IPFunction;
 
 template < typename ParamSet, typename ReturnType = double >
 struct PFunction : IPFunction< ParamSet >
 {
 	typedef IPFunction< ParamSet > Base;
+	typedef PFunction ThisType;
+	
 	typedef typename Base::Ptr BPtr;
 	typedef boost::shared_ptr< const PFunction > Ptr;
 
-	PFunction( BPtr ) :
+	PFunction( BPtr f ) :
 		m_f(f) {}
 
 	virtual ReturnType operator()( const ParamSet& p ) const
@@ -29,6 +49,10 @@ struct PFunction : IPFunction< ParamSet >
 		return m_f->toString();
 	}
 
+	virtual ThisType* clone() const
+	{
+		new ThisType( m_f );
+	}
 
 private:
 	BPtr m_f;
@@ -40,9 +64,14 @@ template < typename ParamSet, typename ReturnType >
 struct IPFunction
 {
 	typedef boost::shared_ptr< const IPFunction > Ptr;
+	typedef IPFunction ThisType;
 
-	virtual ReturnType operator() ( const ParamSet& p ) const;
-	virtual std::string toString() const = 0;
+	typedef ParamSet ParamSet;
+	typedef ReturnType ReturnType;
+
+	virtual ReturnType operator() ( const ParamSet& p ) const = 0;
+	virtual std::string toString() const { return "not done yet"; }
+	virtual ThisType* clone() const = 0; 
 
 	/*template< typename OtherParamSet, typename OtherReturnType >
 	PFunction< OtherParamSet, ReturnType >
@@ -54,39 +83,46 @@ struct IPFunction
 
 	}*/
 
-
-template< typename R1, typename R2 >
-struct ReturnCombiner
-{
-	const static bool val = boost::is_same< R1, R2 >::value;  
-	BOOST_STATIC_ASSERT( val );
-	typedef R1 type;
-};
+	template< typename OtherFunc >
+	PFunction< 
+		typename ParamCombiner< ParamSet, typename OtherFunc::ParamSet >::type,
+		typename ReturnCombiner< ReturnType, typename OtherFunc::ReturnType >::type
+	>
+	operator+( const OtherFunc& f )
+	{
+		return combine<Mult>(f);
+	}
 
 private:
-	template< typename Op, typename OtherParamSet, typename OtherReturnType >
-	PFunction< typename ParamCombiner<ParamSet, OtherParamSet>::type,
-		       typename ReturnCombiner<ReturnType, OtherReturnType>::type >
-	combine( const IPFunction<OtherParamSet, OtherReturnType>& f )
+	template< typename Op, typename OtherFunc >
+	PFunction< typename ParamCombiner< ParamSet, typename OtherFunc::ParamSet >::type,
+		       typename ReturnCombiner< ReturnType, typename OtherFunc::ReturnType >::type >
+	combine( const OtherFunc& f )
 	{
-		typename typename ParamCombiner<ParamSet, OtherParamSet>::type NewParam;
-		typename typename ReturnCombiner<ReturnType OtherReturnType>::type NewReturn;
+		typedef typename ParamCombiner<
+			ParamSet,
+			typename OtherFunc::ParamSet >::type NewParam;
 
-		typename boost::shared_ptr< 
-			const IPFunction<OtherParamSet, OtherReturnType> > OPtr;
+		typedef typename ReturnCombiner<
+			ReturnType,
+			typename OtherFunc::ReturnType>::type NewReturn;
 
-		typename boost::shared_ptr< 
-			const IPFunction<NewParam, NewReturn> > RPtr;
+		typedef boost::shared_ptr< const OtherFunc > OPtr;
+
+		typedef boost::shared_ptr< 
+			const IPFunction< NewParam, NewReturn> > RPtr;
 		
-		RPtr func( new PFuncOp2< ParamSet, OtherParamSet, ReturnType, OtherReturnType, Op >(
-					Ptr( clone() ),
-					OPtr( f.clone() ) 
-				 ));
+		Ptr me( clone() );
+		OPtr nf1( f.clone() );
+
+		RPtr func( new FunctionOp< ThisType, OtherFunc, Op >( me, nf1 ) );
+					//Ptr( clone() ),
+					//OPtr( f.clone() ) 
+				 //));
+		
 		return PFunction< NewParam, NewReturn >( func );
 
 	}
-
-
 };
 
 #endif //META_ALGEBRA_FUNCTION_H

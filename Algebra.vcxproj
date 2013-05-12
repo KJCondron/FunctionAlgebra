@@ -76,7 +76,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BasicFunctions.h" />
     <ClInclude Include="Function.h" />
+    <ClInclude Include="FunctionOp.h" />
     <ClInclude Include="MetaFunctions.h" />
     <ClInclude Include="Param.h" />
     <ClInclude Include="ParamCombiner.h" />
